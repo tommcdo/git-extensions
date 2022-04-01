@@ -1,0 +1,21 @@
+#!/bin/bash
+
+org=$1
+remote=${2:-upstream}
+
+origin=$(git remote get-url origin)
+
+case "$origin" in
+    git*)
+        github=$(echo $origin | cut -d: -f1)
+        repo=$(echo $origin | cut -d: -f2 | cut -d/ -f2-)
+        upstream=${github}:${org}/${repo}
+        ;;
+    http*)
+        github=$(echo $origin | cut -d/ -f1-3)
+        repo=$(echo $origin | cut -d/ -f5-)
+        upstream=${github}/${org}/${repo}
+        ;;
+esac
+
+git remote add -f $remote $upstream

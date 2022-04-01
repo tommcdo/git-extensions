@@ -1,0 +1,13 @@
+#!/bin/bash
+
+main_branch=${1:-main}
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+git stash
+git checkout $main_branch
+git fetch
+git rebase
+git checkout $current_branch
+git rebase $main_branch
+git stash pop
+git remote update --prune

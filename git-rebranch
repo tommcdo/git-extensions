@@ -1,0 +1,11 @@
+#!/bin/bash
+
+new_name=$1
+tracking_branch=$(git rev-parse --abbrev-ref --symbolic-full-name @{u})
+since=${2:-$tracking_branch}
+
+git stash
+git branch $new_name
+git reset --hard $since
+git checkout $new_name
+git stash pop
