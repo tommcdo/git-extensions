@@ -1,10 +1,19 @@
 #!/bin/bash
 
-main_branch=${1:-main}
+main_branch=$(git config extensions.defaultBranch)
 current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+current_remote=origin
+if git config branch.${current_branch}.remote >/dev/null; then
+    current_remote=$(git config branch.${current_branch}.remote)
+fi
 
 git stash
 git checkout $main_branch
+if [ "$current_remote" != "origin" ]; then
+    git branch -D $current_branch
+    git remote remove $current_remote
+fi
 git fetch
 git rebase
 git stash pop

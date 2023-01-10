@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ $# -lt 1 ]]; then
+    echo >&2 "Usage: $0 FORK:BRANCH (copy this value from the PR in GitHub)"
+fi
+
+fork_branch=$1
+
+fork=$(echo $fork_branch | cut -d: -f1)
+branch=$(echo $fork_branch | cut -d: -f2)
+
+git makeup $fork
+git checkout -b $branch --track ${fork}/${branch}

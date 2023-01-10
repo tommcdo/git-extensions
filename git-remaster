@@ -1,6 +1,6 @@
 #!/bin/bash
 
-main_branch=${1:-main}
+main_branch=$(git config extensions.defaultBranch)
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
 git stash

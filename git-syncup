@@ -1,0 +1,22 @@
+#!/bin/bash
+
+upstream_remote=${1:-upstream}
+
+main_branch=$(git config extensions.defaultBranch)
+current_branch=$(git branch --show-current)
+
+if [ "$current_branch" != "$main_branch" ]; then
+    echo >&2 "Not currently on $main_branch branch."
+    exit 1
+fi
+
+git config remote.${upstream_remote}.ref
+
+if ! git remote | grep '^'${upstream_remote}'$' >/dev/null ; then
+    echo >&2 "Upstream $upstream_remote is not configured".
+    exit 1
+fi
+
+git fetch $upstream_remote
+git rebase ${upstream_remote}/${main_branch}
+git push origin $main_branch
