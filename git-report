@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Adapted from https://stackoverflow.com/a/63608770
+
+main_branch=$(git config extensions.defaultBranch)
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+blank_line=0
+for remote in $(git remote); do
+    if [ $blank_line -eq 1 ]; then
+        echo
+    fi
+    blank_line=1
+    echo $remote
+    echo $remote | sed -e 's/./-/g'
+    for branch in $((echo $main_branch; echo $current_branch) | uniq); do
+        if git ls-remote --exit-code $remote $branch >/dev/null; then
+            counts=$(git rev-list --count --left-right $remote/$branch...$current_branch) || return 1
+            set -- $counts
+            case $1,$2 in
+                0,0)
+                    echo "* Your branch is up-to-date with $remote/$branch"
+                    ;;
+                0,*)
+                    echo "* Your branch is $2 commits ahead of $remote/$branch"
+                    ;;
+                *,0)
+                    echo "* Your branch is $1 commits behind $remote/$branch"
+                    ;;
+                *)
+                    echo "* Your branch and $remote/$branch have diverged,"
+                    echo "  and have $2 and $1 different commits each, respectively."
+                    ;;
+            esac
+        fi
+    done
+done
