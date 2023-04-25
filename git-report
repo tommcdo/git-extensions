@@ -5,6 +5,8 @@
 main_branch=$(git config extensions.defaultBranch)
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
+git fetch --all
+
 blank_line=0
 for remote in $(git remote); do
     if [ $blank_line -eq 1 ]; then
