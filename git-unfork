@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for fork in $(git remote | grep '^forks/'); do
+    echo "Removing $fork"
+    git remote remove $fork
+done
