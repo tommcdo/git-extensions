@@ -8,7 +8,6 @@ if git config branch.${current_branch}.remote >/dev/null; then
     current_remote=$(git config branch.${current_branch}.remote)
 fi
 
-git stash
 git checkout $main_branch
 if [ "$current_remote" != "origin" ]; then
     git branch -D $current_branch
@@ -16,6 +15,5 @@ if [ "$current_remote" != "origin" ]; then
 fi
 git fetch
 git rebase
-git stash pop
 git branch -d $current_branch
 git remote update --prune
